@@ -1,0 +1,17 @@
+--Opdracht 1g
+
+CREATE TABLE IF NOT EXISTS Bestelling (
+	isbn VARCHAR(20) NOT NULL,
+	aantal INT NOT NULL,
+	FOREIGN KEY (isbn) REFERENCES boek (isbn) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+CREATE TRIGGER add_order (
+	AFTER INSERT ON Boek
+	FOR EACH STATEMENT
+	WHEN (SELECT * FROM OLD WHERE NEW.auteur = auteur)
+	BEGIN
+		INSERT INTO Bestelling (isbn, aantal)
+			VALUES (NEW.isbn, 1);
+	END
+);
